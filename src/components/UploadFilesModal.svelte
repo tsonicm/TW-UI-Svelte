@@ -57,15 +57,16 @@
 
             let formData = new FormData(form);
 
-            fetch('https://localhost:7147/api/file', {
+            let res = fetch('https://localhost:7147/api/file', {
                 method: 'POST',
                 body: formData
-            }).then(
-                location.reload()
-            ).catch(error => {
+            }).catch(error => {
                 console.log(error);
                 alert('An error occured while uploading the files.\nPlease try again.');
             });
+            if (res.status === 200) {
+                hideModal();
+            }
         });
     });
 </script>

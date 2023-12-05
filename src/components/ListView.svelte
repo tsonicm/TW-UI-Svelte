@@ -63,17 +63,19 @@
             <th on:click={sortFilesAlpha} style="cursor: pointer"><span id="directionName">↓</span>Name</th>
             <th on:click={sortFilesSize} style="cursor: pointer"><span id="directionSize"></span>Size</th>
         </tr>
-        {#each files as file}
-            <tr>
-                <td><a href='https://localhost:7147/api/file/{file.id}'><img src = {download} alt = "Download File" /></a></td>
-                <td>{file.name}</td>
-                <td>{convertBytes(file.size)}</td>
-            </tr>
-        {:else}
-            <tr>
-                <td colspan = "3">No files found.</td>
-            </tr>
-        {/each}
+        {#key files}
+            {#each files as file}
+                <tr>
+                    <td><a href='https://localhost:7147/api/file/{file.id}'><img src = {download} alt = "Download File" /></a></td>
+                    <td>{file.name}</td>
+                    <td>{convertBytes(file.size)}</td>
+                </tr>
+            {:else}
+                <tr>
+                    <td colspan = "3">No files found.</td>
+                </tr>
+            {/each}
+        {/key}
     </table>
 </div>
 
