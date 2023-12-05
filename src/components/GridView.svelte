@@ -12,6 +12,13 @@
         return extension;
     }
 
+    function shortenNames(name) {
+        if (name.length > 20) {
+            return name.substring(0, 15) + "..." + name.substring(name.length - 5, name.length);
+        }
+        return name;
+    }
+
     let files = [];
 
     onMount(async () => {
@@ -35,7 +42,7 @@
             {:else}
                 <img id="imgType" src={txt} alt="Text File">
             {/if}
-            <p>{file.name}<br><span>{convertBytes(file.size)}</span></p>
+            <p on:mouseover={file.name} on:focus={file.name}>{shortenNames(file.name)}<br><span>{convertBytes(file.size)}</span></p>
             </a>
         </div>
     {:else}
