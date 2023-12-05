@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import upload from '$lib/images/plus.png';
     import convertBytes from '$lib/convertBytes.js';
+    import sendForm from '$lib/sendForm.js';
 
 
     function showModal() {
@@ -56,22 +57,9 @@
             e.preventDefault();
 
             let formData = new FormData(form);
-
-            fetch('https://localhost:7147/api/file', {
-                method: 'POST',
-                body: formData
-            }).then((response) => {
-                if (response.ok) {
-                    hideModal();
-                } else {
-                    throw new Error('Something went wrong.');
-                }
-            }).then(() => {
-                local.reload();
-            }).catch(error => {
-                console.log(error);
-                alert('An error occured while uploading the files. Please try again.');
-            });
+            let response = sendForm(formData);
+            console.log(response);
+            alert('Breakpoint');
         });
     });
 </script>
