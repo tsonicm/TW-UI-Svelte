@@ -2,14 +2,14 @@
     import { onMount } from 'svelte';
     import download from '$lib/images/download.svg';
     import convertBytes from '$lib/convertBytes.js';
-    import { sortAlphabetically } from '$lib/sortFiles.js';
+    import sortAscAlpha from '$lib/sortFiles.js';
 
     let files = [];
 
     onMount(async () => {
         const res = await fetch('https://localhost:7147/api/file');
         files = await res.json();
-        sortAlphabetically(files);
+        sortAscAlpha(files);
     });
 </script>
 

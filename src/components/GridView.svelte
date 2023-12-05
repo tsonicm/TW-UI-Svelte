@@ -5,7 +5,7 @@
     import image from '$lib/images/image.png';
     import zip from '$lib/images/zip.png';
     import convertBytes from '$lib/convertBytes.js';
-    import { sortAlphabetically } from '$lib/sortFiles.js';
+    import sortAscAlpha from '$lib/sortFiles.js';
 
     function getExtension(name) {
         let extension = name.split('.').pop();
@@ -17,7 +17,7 @@
     onMount(async () => {
         const res = await fetch('https://localhost:7147/api/file');
         files = await res.json();
-        sortAlphabetically(files);
+        sortAscAlpha(files);
     });
 
 </script>
