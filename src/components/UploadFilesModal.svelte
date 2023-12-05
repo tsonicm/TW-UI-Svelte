@@ -65,7 +65,7 @@
                     throw new Error('Something went wrong.');
                 }
             }).then(() => {
-                hideModal();
+                local.reload();
             }).catch(error => {
                 console.log(error);
                 alert('An error occured while uploading the files. Please try again.');
