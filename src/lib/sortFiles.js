@@ -1,4 +1,4 @@
-export default function sortAlphabetically(files) {
+export function sortAlphabetically(files) {
     files.sort((a, b) => {
         let nameA = a.name.toUpperCase();
         let nameB = b.name.toUpperCase();
@@ -65,3 +65,5 @@ export function sortBySizeReverse(files) {
         return 0;
     });
 }
+
+export default {}

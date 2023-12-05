@@ -2,14 +2,52 @@
     import { onMount } from 'svelte';
     import download from '$lib/images/download.svg';
     import convertBytes from '$lib/convertBytes.js';
-    import sortAscAlpha from '$lib/sortFiles.js';
+    import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
 
     let files = [];
+
+    let sortAlpha = -1, sortSize = 0;
+
+    function sortFilesAlpha() {
+        if (sortAlpha === 0) {
+            sortAlphabetically(files);
+            sortAlpha = -1;
+            sortSize = 0;
+            document.getElementById('directionName').innerHTML = '↓';
+            document.getElementById('directionSize').innerHTML = '';
+        } else if (sortAlpha === 1) {
+            sortAlphabetically(files);
+            sortAlpha = -1;
+            document.getElementById('directionName').innerHTML = '↓';
+        } else {
+            sortAlphabeticallyReverse(files);
+            sortAlpha = 1;
+            document.getElementById('directionName').innerHTML = '↑';
+        }
+    }
+
+    function sortFilesSize() {
+        if (sortSize === 0) {
+            sortBySize(files);
+            sortSize = -1;
+            sortAlpha = 0;
+            document.getElementById('directionName').innerHTML = '';
+            document.getElementById('directionSize').innerHTML = '↓';
+        } else if (sortSize === 1) {
+            sortBySize(files);
+            sortSize = -1;
+            document.getElementById('directionSize').innerHTML = '↓';
+        } else {
+            sortBySizeReverse(files);
+            sortSize = 1;
+            document.getElementById('directionSize').innerHTML = '↑';
+        }
+    }
 
     onMount(async () => {
         const res = await fetch('https://localhost:7147/api/file');
         files = await res.json();
-        sortAscAlpha(files);
+        sortAlphabetically(files);
     });
 </script>
 
@@ -22,8 +60,8 @@
         </colgroup>
         <tr>
             <th></th>
-            <th>Name</th>
-            <th>Size</th>
+            <th on:click={sortFilesAlpha} style="cursor: pointer"><span id="directionName">↓</span>Name</th>
+            <th on:click={sortFilesSize} style="cursor: pointer"><span id="directionSize"></span>Size</th>
         </tr>
         {#each files as file}
             <tr>
