@@ -1,13 +1,11 @@
 <script>
     import Header from '../components/Header.svelte';
-    import Footer from '../components/Footer.svelte';
+    import UploadFilesModal from '../components/UploadFilesModal.svelte';
     import FileView from '../components/GridView.svelte';
 	import ListView from '../components/ListView.svelte';
     import Button from '../components/Button.svelte';
-    import List from '$lib/images/list.svg';
-    import Grid from '$lib/images/grid.svg';
 
-    let displayStyle = false;
+    let displayStyle = true;
 
     function setActiveBtn() {
         let btns = document.querySelectorAll('button');
@@ -47,7 +45,7 @@
     <ListView />
 {/if}
 
-<Footer />
+<UploadFilesModal />
 
 <style>
     h1 {
