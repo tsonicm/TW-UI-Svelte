@@ -60,7 +60,9 @@
             fetch('https://localhost:7147/api/file', {
                 method: 'POST',
                 body: formData
-            }).catch(error => {
+            }).then(
+                location.reload()
+            ).catch(error => {
                 console.log(error);
                 alert('An error occured while uploading the files.\nPlease try again.');
             });
