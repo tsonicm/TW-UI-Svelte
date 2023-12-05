@@ -1,7 +1,8 @@
 [
     {
         "name": "File.txt",
-        "size": 3456432
+        "size": 3456432,
+        "id": 123
     },
     {
         "name": "Image.png",

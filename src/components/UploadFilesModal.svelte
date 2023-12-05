@@ -60,8 +60,8 @@
         <div class = "close-btn">
             <a href = "#" on:click={hideModal}>X</a>
         </div>
-        <form method="post" use:enhance enctype="multipart/form-data">
-            <input bind:files multiple type = "file" id = "fileUploadBtn" />
+        <form method="post" use:enhance enctype="multipart/form-data" action="https://localhost:7147/api/file">
+            <input bind:files multiple type = "file" id = "fileUploadBtn" name="fisiers"/>
             <label for = "fileUploadBtn">Choose your files</label>
             <div class = "chosen-files">
                 <p>No files chosen.</p>
@@ -144,7 +144,7 @@
 
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
-        transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
     }
 
     #fileUploadBtn {

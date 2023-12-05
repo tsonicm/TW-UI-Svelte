@@ -1,5 +1,5 @@
 <script>
-    import files from '../data/files.json';
+    import getFiles from '$lib/getFiles.js';
     import txt from '$lib/images/file.png';
     import doc from '$lib/images/document.png';
     import image from '$lib/images/image.png';
@@ -10,12 +10,14 @@
         let extension = name.split('.').pop();
         return extension;
     }
+
+    let files = getFiles();
 </script>
 
 <div id="files">
     {#each files as file}
         <div id="file">
-            <a href = "#">
+            <a href = 'htpps://localhost:7147/api/file/${file.id}'>
             {#if getExtension(file.name) === "docx" || getExtension(file.name) === "doc" || getExtension(file.name) === "pdf" || getExtension(file.name) === "pptx" || getExtension(file.name) === "ppt" || getExtension(file.name) === "xlsx" || getExtension(file.name) === "xls"}
                 <img id="imgType" src={doc} alt="Document">
             {:else if getExtension(file.name) === "png" || getExtension(file.name) === "jpg" || getExtension(file.name) === "jpeg" || getExtension(file.name) === "gif"}
@@ -28,6 +30,8 @@
             <p>{file.name}<br><span>{convertBytes(file.size)}</span></p>
             </a>
         </div>
+    {:else}
+        <p>No files found.</p>
     {/each}
 </div> 
 

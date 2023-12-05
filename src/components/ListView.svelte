@@ -1,7 +1,9 @@
 <script>
-    import files from '../data/files.json';
+    import getFiles from '$lib/getFiles.js';
     import download from '$lib/images/download.svg';
     import convertBytes from '$lib/convertBytes.js';
+
+    let files = getFiles();
 </script>
 
 <div class = "content-wrapper">
@@ -18,9 +20,13 @@
         </tr>
         {#each files as file}
             <tr>
-                <td><a href="#"><img src = {download} alt = "Download File" /></a></td>
+                <td><a href='https://localhost:7147/api/file/${file.id}'><img src = {download} alt = "Download File" /></a></td>
                 <td>{file.name}</td>
                 <td>{convertBytes(file.size)}</td>
+            </tr>
+        {:else}
+            <tr>
+                <td colspan = "3">No files found.</td>
             </tr>
         {/each}
     </table>
