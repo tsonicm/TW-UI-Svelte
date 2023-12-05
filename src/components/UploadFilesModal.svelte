@@ -61,7 +61,9 @@
                 method: 'POST',
                 body: formData
             }).then((response) => {
-                if (!response.ok) {
+                if (response.ok) {
+                    hideModal();
+                } else {
                     throw new Error('Something went wrong.');
                 }
             }).then(() => {
