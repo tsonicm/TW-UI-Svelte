@@ -57,16 +57,22 @@
 
             let formData = new FormData(form);
 
-            let res = fetch('https://localhost:7147/api/file', {
+            fetch('https://localhost:7147/api/file', {
                 method: 'POST',
                 body: formData
+            }).then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Something went wrong.');
+                }
+            }).then((responseJson) => {
+                console.log(responseJson);
+                hideModal();
             }).catch(error => {
                 console.log(error);
-                alert('An error occured while uploading the files.\nPlease try again.');
+                alert('An error occured while uploading the files. Please try again.');
             });
-            if (res.status === 200) {
-                hideModal();
-            }
         });
     });
 </script>
