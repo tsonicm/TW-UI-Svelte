@@ -13,8 +13,8 @@
     }
 
     function shortenNames(name) {
-        if (name.length > 20) {
-            return name.substring(0, 15) + "..." + name.substring(name.length - 5, name.length);
+        if (name.length > 10) {
+            return name.substring(0, 6) + "..." + name.substring(name.length - 4, name.length);
         }
         return name;
     }
