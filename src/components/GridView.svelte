@@ -1,5 +1,5 @@
 <script>
-    import getFiles from '$lib/getFiles.js';
+    import { onMount } from 'svelte';
     import txt from '$lib/images/file.png';
     import doc from '$lib/images/document.png';
     import image from '$lib/images/image.png';
@@ -11,7 +11,13 @@
         return extension;
     }
 
-    let files = getFiles();
+    let files = [];
+
+    onMount(async () => {
+        const res = await fetch('https://localhost:7147/api/file');
+        files = await res.json();
+    });
+
 </script>
 
 <div id="files">

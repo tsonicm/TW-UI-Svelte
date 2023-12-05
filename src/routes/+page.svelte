@@ -1,7 +1,7 @@
 <script>
     import Header from '../components/Header.svelte';
     import UploadFilesModal from '../components/UploadFilesModal.svelte';
-    import FileView from '../components/GridView.svelte';
+    import GridView from '../components/GridView.svelte';
 	import ListView from '../components/ListView.svelte';
     import Button from '../components/Button.svelte';
 
@@ -9,8 +9,6 @@
 
     function setActiveBtn() {
         let btns = document.querySelectorAll('button');
-        let listV = document.getElementById('listV');
-        let gridV = document.getElementById('gridV');
 
         btns.forEach(btn => {
             btn.classList.remove('active');
@@ -40,7 +38,7 @@
         </Button>
 </div>
 {#if displayStyle}
-    <FileView />
+    <GridView />
 {:else}
     <ListView />
 {/if}

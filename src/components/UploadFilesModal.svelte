@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from 'svelte';
     import upload from '$lib/images/plus.png';
     import convertBytes from '$lib/convertBytes.js';
 
@@ -46,9 +47,25 @@
             fileDiv.innerHTML = file.name + ' (' + convertBytes(file.size) + ')';
             filesChosen.appendChild(fileDiv);
         }
-    }
+    };
 
+    onMount(() => {
+        let form = document.querySelector('#fileForm');
+        
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
 
+            let formData = new FormData(form);
+
+            fetch('https://localhost:7147/api/file', {
+                method: 'POST',
+                body: formData
+            }).catch(error => {
+                console.log(error);
+                alert('An error occured while uploading the files.\nPlease try again.');
+            });
+        });
+    });
 </script>
 
 <div id = "fileUpload" on:click={showModal}>
@@ -60,7 +77,7 @@
         <div class = "close-btn">
             <a href = "#" on:click={hideModal}>X</a>
         </div>
-        <form method="post" use:enhance enctype="multipart/form-data" action="https://localhost:7147/api/file">
+        <form id = "fileForm" method="post" enctype="multipart/form-data">
             <input bind:files multiple type = "file" id = "fileUploadBtn" name="fisiers"/>
             <label for = "fileUploadBtn">Choose your files</label>
             <div class = "chosen-files">
@@ -117,7 +134,7 @@
 
         z-index: 99;
 
-        transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
     }
 
     #uploadModal {
