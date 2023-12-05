@@ -61,13 +61,10 @@
                 method: 'POST',
                 body: formData
             }).then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
+                if (!response.ok) {
                     throw new Error('Something went wrong.');
                 }
-            }).then((responseJson) => {
-                console.log(responseJson);
+            }).then(() => {
                 hideModal();
             }).catch(error => {
                 console.log(error);

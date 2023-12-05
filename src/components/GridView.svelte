@@ -7,14 +7,16 @@
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
 
+    //import localDB from '../data/files.json';
+
     function getExtension(name) {
         let extension = name.split('.').pop();
         return extension;
     }
 
     function shortenNames(name) {
-        if (name.length > 10) {
-            return name.substring(0, 6) + "..." + name.substring(name.length - 4, name.length);
+        if (name.length > 15) {
+            return name.substring(0, 9) + "..." + name.substring(name.length - 6, name.length);
         }
         return name;
     }
@@ -24,9 +26,9 @@
     onMount(async () => {
         const res = await fetch('https://localhost:7147/api/file');
         files = await res.json();
+        //files = localDB;
         sortAlphabetically(files);
     });
-
 </script>
 
 <div id="files">
@@ -42,7 +44,7 @@
             {:else}
                 <img id="imgType" src={txt} alt="Text File">
             {/if}
-            <p on:mouseover={file.name} on:focus={file.name}>{shortenNames(file.name)}<br><span>{convertBytes(file.size)}</span></p>
+            <p>{shortenNames(file.name)}<br><span>{convertBytes(file.size)}</span></p>
             </a>
         </div>
     {:else}
@@ -116,5 +118,4 @@
     a:hover {
         color: #900000;
     }
-
 </style>
