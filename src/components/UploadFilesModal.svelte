@@ -58,8 +58,9 @@
 
             let formData = new FormData(form);
             let response = sendForm(formData);
-            console.log(response);
+            console.log(response.status);
             alert('Breakpoint');
+            
         });
     });
 </script>
