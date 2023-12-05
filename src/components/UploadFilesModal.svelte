@@ -1,5 +1,7 @@
 <script>
     import upload from '$lib/images/plus.png';
+    import convertBytes from '$lib/convertBytes.js';
+
 
     function showModal() {
         let modal = document.querySelector('#uploadModalBackground');
@@ -30,18 +32,6 @@
             p.innerHTML = 'No files chosen.';
             filesChosen.appendChild(p);
         }
-    }
-
-    function convertBytes(bytes) {
-        let sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-
-        if (bytes == 0) {
-            return '0 Byte';
-        }
-
-        let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-
-        return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
     }
 
     let files;
@@ -82,45 +72,10 @@
 </div>
 
 <style>
-
-    .chosen-files {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        width: 100%;
-        max-height: 150px;
-
-        overflow-y: auto;
-
-        margin-top: 1rem;
-
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        font-size: 1rem;
-        color: #adadad;
-    }
-
-    .chosen-files::-webkit-scrollbar {
-        width: 5px;
-    }
-
-    .chosen-files::-webkit-scrollbar-track {
-        background: #ddd;
-    }
-
-    .chosen-files::-webkit-scrollbar-thumb {
-        background: #900000;
-    }
-
-    .chosen-files::-webkit-scrollbar-thumb:hover {
-        background: #adadad;
-    }
-
     #fileUpload {
         position: fixed;
         bottom: 15px;
-        right: 15px;
+        right: 20px;
         cursor: pointer;
     }
 
@@ -176,7 +131,7 @@
         align-items: center;
         justify-content: center;
 
-        width: 300px;
+        width: 400px;
         height: 300px;
 
         background-color: #f2f2f2;
@@ -201,6 +156,43 @@
         font-size: 1.2rem;
         color: #900000;
         cursor: pointer;
+    }
+
+    .chosen-files {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        max-width: 350px;
+        max-height: 150px;
+
+        overflow-y: auto;
+
+        margin-top: 1rem;
+
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 1rem;
+        color: #adadad;
+    }
+
+    .chosen-files::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+    }
+
+    .chosen-files::-webkit-scrollbar-track {
+        background: #ddd;
+        border-radius: 5px;
+    }
+
+    .chosen-files::-webkit-scrollbar-thumb {
+        background: #900000;
+        border-radius: 5px;
+    }
+
+    .chosen-files::-webkit-scrollbar-thumb:hover {
+        background: #adadad;
     }
 
     .close-btn {

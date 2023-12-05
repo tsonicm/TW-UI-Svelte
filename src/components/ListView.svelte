@@ -1,36 +1,61 @@
 <script>
     import files from '../data/files.json';
     import download from '$lib/images/download.svg';
-
-    function getExtension(name) {
-        let extension = name.split('.').pop();
-        return extension;
-    }
+    import convertBytes from '$lib/convertBytes.js';
 </script>
 
-<table class = "maxWidth">
-    <colgroup>
-        <col style = "width: 5%;">
-        <col style = "width: 80%;">
-        <col style = "width: 15%;">
-    </colgroup>
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Size</th>
-    </tr>
-    {#each files as file}
+<div class = "content-wrapper">
+    <table>
+        <colgroup>
+            <col style = "width: 5%;">
+            <col style = "width: 85%;">
+            <col style = "width: 10%;">
+        </colgroup>
         <tr>
-            <td><a href="#"><img src = {download} alt = "Download File" /></a></td>
-            <td>{file.name}</td>
-            <td>{file.size}</td>
+            <th></th>
+            <th>Name</th>
+            <th>Size</th>
         </tr>
-    {/each}
-</table>
+        {#each files as file}
+            <tr>
+                <td><a href="#"><img src = {download} alt = "Download File" /></a></td>
+                <td>{file.name}</td>
+                <td>{convertBytes(file.size)}</td>
+            </tr>
+        {/each}
+    </table>
+</div>
 
 <style>
-    .maxWidth {
-        width: 100%;
+    .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        max-height: calc(100vh - 290px);
+        overflow-y: scroll;
+    }
+
+    .content-wrapper::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .content-wrapper::-webkit-scrollbar-track {
+        background: #ddd;
+        border-radius: 5px;
+    }
+
+    .content-wrapper::-webkit-scrollbar-thumb {
+        background: #900000;
+        border-radius: 5px;
+    }
+
+    .content-wrapper::-webkit-scrollbar-thumb:hover {
+        background: #adadad;
+    }
+
+    .content-wrapper table {
+        width: 95%;
         border-collapse: collapse;
     }
 

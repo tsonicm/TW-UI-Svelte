@@ -4,6 +4,7 @@
     import doc from '$lib/images/document.png';
     import image from '$lib/images/image.png';
     import zip from '$lib/images/zip.png';
+    import convertBytes from '$lib/convertBytes.js';
 
     function getExtension(name) {
         let extension = name.split('.').pop();
@@ -24,7 +25,7 @@
             {:else}
                 <img id="imgType" src={txt} alt="Text File">
             {/if}
-            <p>{file.name}<br><span>{file.size}</span></p>
+            <p>{file.name}<br><span>{convertBytes(file.size)}</span></p>
             </a>
         </div>
     {/each}
@@ -35,6 +36,27 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         gap: 20px;
+        padding: 20px;
+        overflow-y: auto;
+        max-height: calc(100vh - 320px);
+    }
+
+    #files::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    #files::-webkit-scrollbar-track {
+        background: #ddd;
+        border-radius: 5px;
+    }
+
+    #files::-webkit-scrollbar-thumb {
+        background: #900000;
+        border-radius: 5px;
+    }
+
+    #files::-webkit-scrollbar-thumb:hover {
+        background: #adadad;
     }
 
     #file {

@@ -1,50 +1,85 @@
 [
     {
         "name": "File.txt",
-        "size": "1.2MB"
+        "size": 3456432
     },
     {
         "name": "Image.png",
-        "size": "3.5MB"
+        "size": 4635
     },
     {
         "name": "Image.png",
-        "size": "3.5MB"
+        "size": 845632
     },
     {
         "name": "Image.png",
-        "size": "3.5MB"
-    },
-    {
+        "size": 1235445
+    },{
         "name": "Image.png",
-        "size": "3.5MB"
-    },
-    {
+        "size": 124321
+    },{
+        "name": "Images.zip",
+        "size": 6234534123
+    },{
         "name": "Image.png",
-        "size": "3.5MB"
-    },
-    {
+        "size": 12345
+    },{
         "name": "Image.png",
-        "size": "3.5MB"
-    },
-    {
+        "size": 765412
+    },{
         "name": "Image.png",
-        "size": "3.5MB"
-    },
-    {
-        "name": "Image.png",
-        "size": "3.5MB"
+        "size": 814255
     },
     {
         "name": "Classwork.docx",
-        "size": "3.5MB"
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
+    },
+    {
+        "name": "Classwork.docx",
+        "size": 23465768
     },
     {
         "name": "Image.png",
-        "size": "3.5MB"
+        "size": 2633434
     },
     {
         "name": "Homework.zip",
-        "size": "4.2TB"
+        "size": 4200000000000
+    },
+    {
+        "name": "Changes.pptx",
+        "size": 420000000
+    },
+    {
+        "name": "MyFiles.rar",
+        "size": 12659812341
     }
 ]
