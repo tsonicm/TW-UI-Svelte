@@ -16,7 +16,7 @@
 
     function shortenNames(name) {
         if (name.length > 15) {
-            return name.substring(0, 9) + "..." + name.substring(name.length - 6, name.length);
+            return name.substring(0, 8) + "..." + name.substring(name.length - 6, name.length);
         }
         return name;
     }
