@@ -4,7 +4,7 @@ export default async function sendForm(form) {
             method: 'POST',
             body: form
         });
-        const result = await response.json();
+        const result = await response;
         return result;
     } catch (error) {
         console.error(error);

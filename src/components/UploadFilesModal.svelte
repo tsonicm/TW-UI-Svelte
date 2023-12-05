@@ -58,9 +58,12 @@
 
             let formData = new FormData(form);
             let response = sendForm(formData);
-            console.log(response);
-            alert('Breakpoint');
-            
+        
+            if (response) {
+                location.reload();
+            } else {
+                alert('Error uploading files.');
+            }
         });
     });
 </script>
