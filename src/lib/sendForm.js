@@ -1,8 +1,8 @@
 export default async function sendForm(form) {
-    let response = await fetch(form.action, {
+    let response = await fetch('https://localhost:7147/api/file', {
         method: 'POST',
-        body: form
-    });
+        body: formData
+    })
     let result = await response.json();
     return result;
 }
