@@ -15,7 +15,7 @@ export default function sortAlphabetically(files) {
     });
 }
 
-export default function sortAlphabeticallyReverse(files) {
+export function sortAlphabeticallyReverse(files) {
     files.sort((a, b) => {
         let nameA = a.name.toUpperCase();
         let nameB = b.name.toUpperCase();
@@ -32,7 +32,7 @@ export default function sortAlphabeticallyReverse(files) {
     });
 }
 
-export default function sortBySize(files) {
+export function sortBySize(files) {
     files.sort((a, b) => {
         let sizeA = a.size;
         let sizeB = b.size;
@@ -49,7 +49,7 @@ export default function sortBySize(files) {
     });
 }
 
-export default function sortBySizeReverse(files) {
+export function sortBySizeReverse(files) {
     files.sort((a, b) => {
         let sizeA = a.size;
         let sizeB = b.size;
