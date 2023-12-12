@@ -7,7 +7,7 @@
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
 
-    //import localDB from '../data/files.json';
+    // import localDB from '../data/files.json';
 
     function getExtension(name) {
         let extension = name.split('.').pop();
@@ -26,7 +26,7 @@
     onMount(async () => {
         const res = await fetch('https://localhost:7147/api/file');
         files = await res.json();
-        //files = localDB;
+        // files = localDB;
         sortAlphabetically(files);
     });
 </script>

@@ -4,21 +4,21 @@
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
 
-    //import localDB from '../data/files.json';
+    // import localDB from '../data/files.json';
     let files = [];
 
-    let sortAlpha = -1, sortSize = 0;
+    let sortAlpha = 1, sortSize = 0;
 
     function sortFilesAlpha() {
         if (sortAlpha === 0) {
             sortAlphabetically(files);
-            sortAlpha = -1;
+            sortAlpha = 1;
             sortSize = 0;
             document.getElementById('directionName').innerHTML = '↓';
             document.getElementById('directionSize').innerHTML = '';
         } else if (sortAlpha === 1) {
             sortAlphabetically(files);
-            sortAlpha = -1;
+            sortAlpha = 2;
             document.getElementById('directionName').innerHTML = '↓';
         } else {
             sortAlphabeticallyReverse(files);
@@ -30,13 +30,13 @@
     function sortFilesSize() {
         if (sortSize === 0) {
             sortBySize(files);
-            sortSize = -1;
+            sortSize = 1;
             sortAlpha = 0;
             document.getElementById('directionName').innerHTML = '';
             document.getElementById('directionSize').innerHTML = '↓';
         } else if (sortSize === 1) {
             sortBySize(files);
-            sortSize = -1;
+            sortSize = 2;
             document.getElementById('directionSize').innerHTML = '↓';
         } else {
             sortBySizeReverse(files);
@@ -48,7 +48,7 @@
     onMount(async () => {
         const res = await fetch('https://localhost:7147/api/file');
         files = await res.json();
-        //files = localDB;
+        // files = localDB;
         sortAlphabetically(files);
     });
 </script>
@@ -65,7 +65,8 @@
             <th on:click={sortFilesAlpha} style="cursor: pointer"><span id="directionName">↓</span>Name</th>
             <th on:click={sortFilesSize} style="cursor: pointer"><span id="directionSize"></span>Size</th>
         </tr>
-        {#key files}
+        {#key sortAlpha}
+        {#key sortSize}
             {#each files as file}
                 <tr>
                     <td><a href='https://localhost:7147/api/file/{file.id}'><img src = {download} alt = "Download File" /></a></td>
@@ -77,6 +78,7 @@
                     <td colspan = "3">No files found.</td>
                 </tr>
             {/each}
+        {/key}
         {/key}
     </table>
 </div>
