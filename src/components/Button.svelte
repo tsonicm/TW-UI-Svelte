@@ -48,4 +48,8 @@
         align-items: center;
         justify-content: center;
     }
+
+    .span-three {
+        grid-column: span 3;
+    }
 </style>

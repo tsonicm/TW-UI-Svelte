@@ -48,11 +48,17 @@
             </a>
         </div>
     {:else}
-        <p>No files found.</p>
+        <p class="notFound">No files found.</p>
     {/each}
 </div> 
 
 <style>
+
+    .notFound {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
     #files {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));

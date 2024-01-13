@@ -1,13 +1,24 @@
 <script>
     import Button from '../components/Button.svelte';
     import Login from '../components/Login.svelte';
-    import { scale } from 'svelte/transition'
-    
+    import Register from '../components/Register.svelte';
+    import { blur } from 'svelte/transition'
+
     function loginClick() {
         showLogin = true;
     }
 
+    function registerClick() {
+        showRegister = true;
+    }
+
     let showLogin = false;
+    let showRegister = false;
+
+    function switchLoginRegister(event) {
+        showLogin = !showLogin;
+        showRegister = !showRegister;
+    }
 
 </script>
 
@@ -15,14 +26,18 @@
     <div class = "content">
         <h1 class="logo">We<span class="logo">Sync</span></h1>
         <section id="form-area">
-            {#if !showLogin}
-                <div id='splash' class="">
+            {#if !showLogin && !showRegister}
+                <div>
                     <Button class="big" on:click={loginClick}>Login</Button>
-                    <Button class="big margin-left">Register</Button>
+                    <Button class="big margin-left" on:click={registerClick}>Sign up</Button>
                 </div>
-            {:else}
-                <div id="login-form" transition:scale>
-                    <Login />
+            {:else if showLogin}
+                <div id="form" in:blur>
+                    <Login on:changePage={switchLoginRegister}/>
+                </div>
+            {:else if showRegister}
+                <div id="form" in:blur>
+                    <Register on:changePage={switchLoginRegister}/>
                 </div>
             {/if}
         </section>
@@ -57,11 +72,15 @@
         color: #adadad;
     }
 
-    #login-form {
+    #form-area {
+        position: relative;
         display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    .hidden {
-        display: none !important;
+    #form {
+        display: flex;
+        position: relative;
     }
 </style>

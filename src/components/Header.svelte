@@ -1,5 +1,9 @@
 <script>
-    import user from '$lib/images/user.png';
+    import sha256 from 'js-sha256';
+
+    let firstName = 'John';
+    let lastName = 'Doe';
+    let email = 'johndoe@gmail.com';
 </script>
 
 <header>
@@ -8,8 +12,8 @@
             <h1>We<span>Sync</span></h1>
         </div>
         <div class = "account">
-            <img id = "account" src = {user} alt = "Account">
-            <p>John Doe</p>
+            <img id = "pfp" src = 'https://gravatar.com/avatar/{sha256(email)}' alt = "Profile Picture">
+            <p class = "name">{firstName} {lastName}</p>
         </div>
     </div>
     <hr>
@@ -30,15 +34,18 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 90px;
+        width: 120px;
         height: 120px;
-        border-radius: 15px;
         float: right;
     }
 
-    #account {
+    #pfp {
         width: 64px;
         height: 64px;
+    }
+
+    .name {
+        margin: 5px;
     }
 
     .title {
