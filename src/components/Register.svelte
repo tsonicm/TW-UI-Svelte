@@ -96,6 +96,7 @@
         flex-direction: column;
         align-items: left;
         justify-content: center;
+        margin-top: 4px;
     }
 
     .password-area {
