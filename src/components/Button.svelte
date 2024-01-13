@@ -20,6 +20,15 @@
         cursor: pointer;
     }
 
+    button.big {
+        font-size: 1.5rem;
+        width: 100px;
+    }
+    
+    .margin-left {
+        margin-left: 25px;
+    }
+
     button:hover {
         background-color: #900000;
         color: #ffffff;
@@ -28,10 +37,6 @@
     .active {
         background-color: #900000;
         color: #ffffff;
-    }
-
-    .activeIMG {
-        filter: invert(100%);
     }
 
     .btn {
