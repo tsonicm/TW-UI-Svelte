@@ -1,7 +1,7 @@
 <script>
     import Button from './Button.svelte';
     import { createEventDispatcher } from 'svelte';
-    import { persisted } from 'svelte-persistent-store';
+    import { persisted } from 'svelte-persisted-store';
     import { goto } from '$app/navigation';
 
     const dispatch = createEventDispatcher();
