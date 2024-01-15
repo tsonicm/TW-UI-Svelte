@@ -25,7 +25,7 @@
                 lastName: lastName,
                 password: password
             };
-            fetch('http://localhost:8080/register', {
+            fetch('https://localhost:7147/api/user/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
