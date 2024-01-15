@@ -1,18 +1,38 @@
 <script>
     import Button from './Button.svelte';
     import { createEventDispatcher } from 'svelte';
+    import { persisted } from 'svelte-persistent-store';
+    import { goto } from '$app/navigation';
 
     const dispatch = createEventDispatcher();
-    let username = '';
+    let email = '';
     let password = '';
 
-    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    // const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     async function login() {
-        console.log('username: ' + username);
-        console.log('password: ' + password);
-        await sleep(1000);
-        location.href = '/dashboard';
+        const res = await fetch('https://localhost:7147/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                persisted.set('email', data.token);
+                persisted.set('firstName', data.user);
+                persisted.set('lastName', data.user);
+            } else {
+                alert(data.message);
+            }})
+        .then(() => {
+            goto('/dashboard')
+        });
     };
 
     function changePage() {
@@ -24,7 +44,7 @@
 
 <form id = "logon" on:submit|preventDefault={login}>
     <label for="username">Email</label>
-    <input type="text" id="username" bind:value={username} />
+    <input type="text" id="username" bind:value={email} />
     <label for="password">Password</label>
     <input type="password" id="password" bind:value={password} />
     <p>No account? No problem! <span class="goRegister" on:click={changePage}>Sign up here.</span></p>
