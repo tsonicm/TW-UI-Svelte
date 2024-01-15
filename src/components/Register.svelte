@@ -19,11 +19,19 @@
         } else if (firstName === '') {
             alert('Please fill out a first name!');
         }else {
-            console.log('email: ' + email);
-            console.log('firstName: ' + firstName);
-            console.log('lastName: ' + lastName);
-            console.log('password: '+ password);
-            console.log('passwordTwo: ' + passwordTwo);
+            const data = {
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                password: password
+            };
+            fetch('http://localhost:8080/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            }).then(console.log(JSON.stringify(data)));
         }
     };
 
