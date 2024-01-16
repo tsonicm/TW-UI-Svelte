@@ -30,8 +30,8 @@
         sortAlphabetically(files);
     });
 
-    async function handleDelete() {
-        const res2 = fetch('https://localhost:7147/api/file/' + this.file.id, {
+    async function handleDelete(fk) {
+        const res2 = fetch('https://localhost:7147/api/file/' + fk, {
             method: 'DELETE'
         })
         if (res2.status === 200) {
@@ -44,7 +44,7 @@
 <div id="files">
     {#each files as file}
         <div id="file">
-            <a on:click={handleDelete}>
+            <a on:click={handleDelete(file.id)}>
                 <div id="delete-me">
                     X
                 </div>
