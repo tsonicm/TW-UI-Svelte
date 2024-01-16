@@ -30,6 +30,9 @@
             }})
         .then(() => {
             goto('/dashboard')
+        }).catch(err => {
+            console.log(err);
+            alert("API Unavailable!");
         });
     };
 

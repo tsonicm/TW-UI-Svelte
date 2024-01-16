@@ -3,19 +3,21 @@
     import { goto } from '$app/navigation';
     import { get } from 'svelte/store';
     import { usrData } from '$lib/store.js';
+    import { onMount } from 'svelte';
 
     let email = 'John.Doe@host.tld';
     let firstName = 'John';
     let lastName = 'Doe';
 
-    if (get(usrData).email === undefined || get(usrData).email === '' || get(usrData).email === null) {
-        goto('/');
-    } else {
-        email = get(usrData).email;
-        firstName = get(usrData).firstName;
-        lastName = get(usrData).lastName;
-    }
-
+    onMount (() => {
+        if (get(usrData).email === undefined || get(usrData).email === '' || get(usrData).email === null) {
+            goto('/');
+        } else {
+            email = get(usrData).email;
+            firstName = get(usrData).firstName;
+            lastName = get(usrData).lastName;
+        }
+    });
 
 </script>
 
