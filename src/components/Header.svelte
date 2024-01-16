@@ -8,12 +8,12 @@
     let firstName = 'John';
     let lastName = 'Doe';
 
-    if (get(usrData).get('email') == null) {
+    if (get(usrData).email == '') {
         goto('/');
     } else {
-        let email = get(usrData).get('email');
-        let firstName = get(usrData).get('firstName');
-        let lastName = get(usrData).get('lastName');
+        let email = get(usrData).email;
+        let firstName = get(usrData).firstName;
+        let lastName = get(usrData).lastName;
     }
 
 
