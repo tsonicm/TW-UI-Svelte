@@ -11,7 +11,6 @@
     let email = get(usrData).email;
 
     onMount(() => {
-        console.log(vPath);
         document.getElementById('create-dir').addEventListener('submit', async (e) => {
             e.preventDefault();
             let dirName = document.getElementById('dir-name').value;
@@ -35,9 +34,7 @@
                     body: JSON.stringify(data)
                 })
 
-                result = await result.json();
-
-                if (result.status === 200) {
+                if (result.ok) {
                     dispatch('folderCreated');
                     return;
                 } else {

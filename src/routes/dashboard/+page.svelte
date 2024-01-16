@@ -6,7 +6,7 @@
     import Button from '../../components/Button.svelte';
 
     let displayStyle = true;
-    let vPath;
+    let vPath = '/';
 
     function setActiveBtn() {
         let btns = document.querySelectorAll('button');
@@ -16,6 +16,18 @@
         });
 
         this.classList.add('active');
+    }
+
+    let gridView;
+    let listView;
+    function handleReload(reloadPath) {
+        if (displayStyle) {
+            console.log("Griddy");
+            gridView.reloadMe(reloadPath.detail);
+        } else {
+            console.log("Listy");
+            listView.reloadMe(reloadPath.detail);
+        }
     }
 </script>
 
@@ -39,12 +51,12 @@
         </Button>
 </div>
 {#if displayStyle}
-    <GridView on:updatePath={e => vPath = e.detail.vPath} />
+    <GridView on:updatePath={e => vPath = e.detail} bind:this={gridView}/>
 {:else}
-    <ListView on:updatePath={e => vPath = e.detail.vPath}/>
+    <ListView on:updatePath={e => vPath = e.detail} bind:this={listView}/>
 {/if}
 
-<UploadFilesModal vPath = '{vPath}'/>
+<UploadFilesModal myPath={vPath} on:filesUploaded={e => handleReload(e.detail)}/>
 
 <style>
     h1 {

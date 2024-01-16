@@ -5,9 +5,11 @@
     import sendForm from '$lib/sendForm.js';
     import { usrData } from '$lib/store.js';
     import { get } from 'svelte/store';
+    import { createEventDispatcher } from 'svelte';
 
+    let dispatch = createEventDispatcher();
 
-    export let vPath;
+    export let myPath;
 
     function showModal() {
         let modal = document.querySelector('#uploadModalBackground');
@@ -57,10 +59,12 @@
     onMount(() => {
         let form = document.querySelector('#fileForm');
         
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             let formData = new FormData(form);
+
+            let vPath = myPath.detail;
 
             formData.append('owner', get(usrData).email);
 
@@ -70,10 +74,11 @@
 
             formData.append('Virtualpath', vPath);
             
-            let response = sendForm(formData);
-        
-            if (response) {
-                // location.reload();
+            let response = await sendForm(formData);
+
+            if (response.status === 200) {
+                dispatch('filesUploaded', {detail: vPath});
+                hideModal();
             } else {
                 alert('Error uploading files.');
             }

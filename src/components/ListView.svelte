@@ -2,11 +2,17 @@
     import { onMount } from 'svelte';
     import download from '$lib/images/download.svg';
     import createDir from '$lib/images/createDir.png';
+    import folder from '$lib/images/folder.png';
+    import backOne from '$lib/images/return.png';
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
     import CreateDirectoryModal from './CreateDirectoryModal.svelte';
+    import { createEventDispatcher } from 'svelte';
 
     // import localDB from '../data/files.json';
+
+    let dispatch = createEventDispatcher();
+
     let files = [];
 
     let sortAlpha = 1, sortSize = 0;
@@ -14,6 +20,21 @@
     let showDirModal = false;
     
     let vPath;
+
+    let currentPath = '/';
+
+    export function reloadMe(reloadPath) {
+        console.log("GridViewPath: " + reloadPath);
+        const req = new XMLHttpRequest();
+        req.open('GET', 'https://localhost:7147/api/file?path=' + reloadPath, false);
+        req.send(null);
+        files = JSON.parse(req.responseText);
+    }
+
+    function getExtension(name) {
+        let extension = name.split('.').pop();
+        return extension;
+    }
 
     function sortFilesAlpha() {
         if (sortAlpha === 0) {
@@ -52,7 +73,7 @@
     }
 
     onMount(async () => {
-        const res = await fetch('https://localhost:7147/api/file');
+        const res = await fetch('https://localhost:7147/api/file?path=/');
         files = await res.json();
         // files = localDB;
         sortAlphabetically(files);
@@ -65,14 +86,14 @@
             method: 'DELETE'
         })
         if (res2.status === 200) {
-            const res = await fetch('https://localhost:7147/api/file');
+            const res = await fetch('https://localhost:7147/api/file?path=' + currentPath);
             files = await res.json();
         }
     }
 
     async function handleFolderCreated() {
-        showModal = false;
-        const res = await fetch('https://localhost:7147/api/file');
+        showDirModal = false;
+        const res = await fetch('https://localhost:7147/api/file?path=' + currentPath + '/');
         files = await res.json();
     }
 
@@ -84,10 +105,69 @@
         showDirModal = !showDirModal;
     }
 
+    function checkEmpty(file) {
+        if(getExtension(file.name) !== "dir") {
+            return true;
+        }
+
+        const req = new XMLHttpRequest();
+        req.open('GET', `https://localhost:7147/api/file?path=${file.virtualPath}${file.name.split('.')[0]}`, false);
+        req.send(null);
+        let myFiles = JSON.parse(req.responseText);
+            
+        if (myFiles.length === 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function shortenNames(name) {
+        if (name.length > 15) {
+            return name.substring(0, 8) + "..." + name.substring(name.length - 6, name.length);
+        }
+
+        if (getExtension(name) === "dir") {
+            return name.substring(0, name.length - 4);
+        }
+
+        return name;
+    }
+
+    async function handleDownload(ext, id, path, name) {
+        if (ext === "dir") {
+            const res = await fetch(`https://localhost:7147/api/file?path=${path}${name.split('.')[0]}`);
+            files = await res.json();
+            currentPath += `${name.split('.')[0]}/`;
+            dispatch('updatePath', {detail: currentPath})
+        } else {
+        return location.href = `https://localhost:7147/api/file/${id}`;
+        }
+    }
+
+    async function returnOne() {
+        if (currentPath === '/') {
+            return;
+        }
+        let path = currentPath.split('/');
+        path.pop();
+        path.pop();
+        path = path.join('/');
+        path += '/';
+        currentPath = path;
+        if (currentPath === '') {
+            currentPath = '/';
+            path = '/';
+        }
+        dispatch('updatePath', {detail: currentPath})
+        const res = await fetch(`https://localhost:7147/api/file?path=${path}`);
+        files = await res.json();
+    }
+
 </script>
 
 {#if showDirModal}
-    <CreateDirectoryModal on:folderCreated={handleFolderCreated} on:folderNotCreated={handleFolderNotCreated} on:closeModal={handleShowModal}/>
+    <CreateDirectoryModal on:folderCreated={handleFolderCreated} on:folderNotCreated={handleFolderNotCreated} on:closeModal={handleShowModal} vPath='{currentPath}'/>
 {/if}
 
 <div class = "content-wrapper">
@@ -108,15 +188,33 @@
             <td><a style="cursor:pointer;" on:click={handleShowModal}><img src = {createDir} alt = "Create Directory" /></a></td>
             <td colspan = "3">Create a directory</td>
         </tr>
+        {#if currentPath !== '/' && currentPath !== ''}
+            <tr>
+                <td><a style="cursor:pointer;" on:click={returnOne}><img src = {backOne} alt = "Up one level" /></a></td>
+                <td colspan = "3">Up one level</td>
+            </tr>
+        {/if}
         {#key sortAlpha}
         {#key sortSize}
             {#each files as file}
-                <tr>
-                    <td><a href='https://localhost:7147/api/file/{file.id}'><img src = {download} alt = "Download File" /></a></td>
-                    <td>{file.name}</td>
-                    <td>{convertBytes(file.size)}</td>
-                    <td><a id="delete-this" on:click={handleDelete(file.id)}>X</a></td>
-                </tr>
+                {#if getExtension(file.name) === 'dir'}
+                    <tr>
+                        <td><a style="cursor: pointer;" on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)}><img src = {folder} alt = "Download File" /></a></td>
+                        {#if checkEmpty(file)}
+                            <td colspan="2">{shortenNames(file.name)}</td>
+                            <td><a id="delete-this" on:click={handleDelete(file.id)}>X</a></td>
+                        {:else}
+                            <td colspan="3">{shortenNames(file.name)}</td>
+                        {/if}
+                    </tr>
+                {:else}
+                    <tr>
+                        <td><a href='https://localhost:7147/api/file/{file.id}'><img src = {download} alt = "Download File" /></a></td>
+                        <td>{file.name}</td>
+                        <td>{convertBytes(file.size)}</td>
+                        <td><a id="delete-this" on:click={handleDelete(file.id)}>X</a></td>
+                    </tr>
+                    {/if}
             {:else}
                 <tr>
                     <td colspan = "4">No files found.</td>

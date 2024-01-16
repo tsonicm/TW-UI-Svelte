@@ -18,6 +18,14 @@
 
     const dispatch = createEventDispatcher();
 
+    export function reloadMe(reloadPath) {
+        console.log("GridViewPath: " + reloadPath);
+        const req = new XMLHttpRequest();
+        req.open('GET', 'https://localhost:7147/api/file?path=' + reloadPath, false);
+        req.send(null);
+        files = JSON.parse(req.responseText);
+    }
+
     function getExtension(name) {
         let extension = name.split('.').pop();
         return extension;
@@ -47,7 +55,7 @@
         // files = localDB;
         sortAlphabetically(files);
         vPath = files[0].virtualPath;
-        dispatch('changePath', {detail: vPath});
+        dispatch('updatePath', {detail: vPath});
     });
 
     async function handleDelete(fk) {
@@ -55,14 +63,14 @@
             method: 'DELETE'
         })
         if (res2.status === 200) {
-            const res = await fetch('https://localhost:7147/api/file');
+            const res = await fetch('https://localhost:7147/api/file?path=' + currentPath);
             files = await res.json();
         }
     }
 
     async function handleFolderCreated() {
-        showModal = false;
-        const res = await fetch('https://localhost:7147/api/file');
+        showDirModal = false;
+        const res = await fetch('https://localhost:7147/api/file?path=' + currentPath);
         files = await res.json();
     }
 
@@ -79,22 +87,46 @@
             const res = await fetch(`https://localhost:7147/api/file?path=${path}${name.split('.')[0]}`);
             files = await res.json();
             currentPath += `${name.split('.')[0]}/`;
+            dispatch('updatePath', {detail: currentPath})
         } else {
         return location.href = `https://localhost:7147/api/file/${id}`;
         }
     }
 
     async function returnOne() {
+        if (currentPath === '/') {
+            return;
+        }
         let path = currentPath.split('/');
         path.pop();
         path.pop();
         path = path.join('/');
+        path += '/';
         currentPath = path;
         if (currentPath === '') {
             currentPath = '/';
+            path = '/';
         }
+        dispatch('updatePath', {detail: currentPath})
         const res = await fetch(`https://localhost:7147/api/file?path=${path}`);
         files = await res.json();
+    }
+
+    function checkEmpty(file) {
+        if(getExtension(file.name) !== "dir") {
+            return true;
+        }
+
+        const req = new XMLHttpRequest();
+        req.open('GET', `https://localhost:7147/api/file?path=${file.virtualPath}${file.name.split('.')[0]}`, false);
+        req.send(null);
+        let myFiles = JSON.parse(req.responseText);
+            
+        if (myFiles.length === 0) {
+            return true;
+        }
+
+        return false;
     }
     
 </script>
@@ -120,14 +152,15 @@
     {/if}
     {#each files as file}
         <div id="file">
+            {#if checkEmpty(file)}
+                <a on:click={handleDelete(file.id)}>
+                    <div id="delete-me">
+                        X
+                    </div>
+                </a>
+            {/if}
 
-            <a on:click={handleDelete(file.id)}>
-                <div id="delete-me">
-                    X
-                </div>
-            </a>
             <a on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)} style="cursor:pointer;">
- 
             {#if getExtension(file.name) === "docx" || getExtension(file.name) === "doc" || getExtension(file.name) === "pdf" || getExtension(file.name) === "pptx" || getExtension(file.name) === "ppt" || getExtension(file.name) === "xlsx" || getExtension(file.name) === "xls"}
                 <img id="imgType" src={doc} alt="Document">
             {:else if getExtension(file.name) === "png" || getExtension(file.name) === "jpg" || getExtension(file.name) === "jpeg" || getExtension(file.name) === "gif"}
