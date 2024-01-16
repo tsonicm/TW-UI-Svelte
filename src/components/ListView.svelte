@@ -4,7 +4,7 @@
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
 
-    import localDB from '../data/files.json';
+    // import localDB from '../data/files.json';
     let files = [];
 
     let sortAlpha = 1, sortSize = 0;
@@ -46,9 +46,9 @@
     }
 
     onMount(async () => {
-        // const res = await fetch('https://localhost:7147/api/file');
-        // files = await res.json();
-        files = localDB;
+        const res = await fetch('https://localhost:7147/api/file');
+        files = await res.json();
+        // files = localDB;
         sortAlphabetically(files);
     });
 </script>
