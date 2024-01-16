@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import download from '$lib/images/download.svg';
+    import createDir from '$lib/images/createDir.png';
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
 
@@ -77,6 +78,10 @@
             <th on:click={sortFilesSize} style="cursor: pointer"><span id="directionSize"></span>Size</th>
             <th></th>
         </tr>
+        <tr>
+            <td><a on:click={showModal}><img src = {createDir} alt = "Create Directory" /></a></td>
+            <td colspan = "3">Create a directory</td>
+        </tr>
         {#key sortAlpha}
         {#key sortSize}
             {#each files as file}
@@ -88,7 +93,7 @@
                 </tr>
             {:else}
                 <tr>
-                    <td colspan = "3">No files found.</td>
+                    <td colspan = "4">No files found.</td>
                 </tr>
             {/each}
         {/key}
