@@ -23,12 +23,12 @@
         })
         .then(res => res.json())
         .then(data => {
-            if (data.success) {
+            if (data.status != 404) {
                 persisted.set('email', data.token);
                 persisted.set('firstName', data.user);
                 persisted.set('lastName', data.user);
             } else {
-                alert(data.message);
+                alert("User not found!");
             }})
         .then(() => {
             goto('/dashboard')
