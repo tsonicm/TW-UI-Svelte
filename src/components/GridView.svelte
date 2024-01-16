@@ -31,12 +31,15 @@
     });
 
     async function handleDelete(fk) {
-        const res2 = fetch('https://localhost:7147/api/file/' + fk, {
+        console.log(fk)
+        const res2 = await fetch('https://localhost:7147/api/file/' + fk, {
             method: 'DELETE'
         })
         if (res2.status === 200) {
             const res = await fetch('https://localhost:7147/api/file');
+            console.log(res)
             files = await res.json();
+            console.log(files)
         }
     }
 </script>

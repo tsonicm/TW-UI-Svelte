@@ -65,7 +65,7 @@
             let response = sendForm(formData);
         
             if (response) {
-                location.reload();
+                // location.reload();
             } else {
                 alert('Error uploading files.');
             }
