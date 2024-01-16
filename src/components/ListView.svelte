@@ -51,19 +51,31 @@
         // files = localDB;
         sortAlphabetically(files);
     });
+
+    async function handleDelete(fk) {
+        const res2 = await fetch('https://localhost:7147/api/file/' + fk, {
+            method: 'DELETE'
+        })
+        if (res2.status === 200) {
+            const res = await fetch('https://localhost:7147/api/file');
+            files = await res.json();
+        }
+    }
 </script>
 
 <div class = "content-wrapper">
     <table>
         <colgroup>
             <col style = "width: 5%;">
-            <col style = "width: 85%;">
+            <col style = "width: 80%;">
             <col style = "width: 10%;">
+            <col style = "width: 5%;">
         </colgroup>
         <tr>
             <th></th>
             <th on:click={sortFilesAlpha} style="cursor: pointer"><span id="directionName">↓</span>Name</th>
             <th on:click={sortFilesSize} style="cursor: pointer"><span id="directionSize"></span>Size</th>
+            <th></th>
         </tr>
         {#key sortAlpha}
         {#key sortSize}
@@ -72,6 +84,7 @@
                     <td><a href='https://localhost:7147/api/file/{file.id}'><img src = {download} alt = "Download File" /></a></td>
                     <td>{file.name}</td>
                     <td>{convertBytes(file.size)}</td>
+                    <td><a id="delete-this" on:click={handleDelete(file.id)}>X</a></td>
                 </tr>
             {:else}
                 <tr>
@@ -139,5 +152,14 @@
 
     img:hover {
         filter: invert(8%) sepia(97%) saturate(5396%) hue-rotate(14deg) brightness(87%) contrast(117%);
+    }
+    
+    #delete-this {
+        color: #adadad;
+        cursor: pointer;
+    }
+
+    #delete-this:hover {
+        color: #900000;
     }
 </style>
