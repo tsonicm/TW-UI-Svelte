@@ -8,7 +8,7 @@
     let firstName = 'John';
     let lastName = 'Doe';
 
-    if (persisted.get('email') == null) {
+    if (get(usrData).get('email') == null) {
         goto('/');
     } else {
         let email = get(usrData).get('email');
