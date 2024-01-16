@@ -11,6 +11,8 @@
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
     import CreateDirectoryModal from './CreateDirectoryModal.svelte';
     import { createEventDispatcher } from 'svelte';
+    import { get } from 'svelte/store';
+    import { usrData } from '$lib/store.js';
 
     // import localDB from '../data/files.json';
 
@@ -21,7 +23,7 @@
     export function reloadMe(reloadPath) {
         console.log("GridViewPath: " + reloadPath);
         const req = new XMLHttpRequest();
-        req.open('GET', 'https://localhost:7147/api/file?path=' + reloadPath, false);
+        req.open('GET', 'https://localhost:7147/api/file?path=' + reloadPath + '&userMail=' + get(usrData).email, false);
         req.send(null);
         files = JSON.parse(req.responseText);
     }
@@ -50,7 +52,7 @@
     let currentPath = '/';
 
     onMount(async () => {
-        const res = await fetch('https://localhost:7147/api/file?path=/');
+        const res = await fetch('https://localhost:7147/api/file?path=/&userMail=' + get(usrData).email);
         files = await res.json();
         // files = localDB;
         sortAlphabetically(files);
@@ -63,14 +65,14 @@
             method: 'DELETE'
         })
         if (res2.status === 200) {
-            const res = await fetch('https://localhost:7147/api/file?path=' + currentPath);
+            const res = await fetch('https://localhost:7147/api/file?path=' + currentPath + '&userMail=' + get(usrData).email);
             files = await res.json();
         }
     }
 
     async function handleFolderCreated() {
         showDirModal = false;
-        const res = await fetch('https://localhost:7147/api/file?path=' + currentPath);
+        const res = await fetch('https://localhost:7147/api/file?path=' + currentPath + '&userMail=' + get(usrData).email);
         files = await res.json();
     }
 
@@ -84,7 +86,7 @@
 
     async function handleDownload(ext, id, path, name) {
         if (ext === "dir") {
-            const res = await fetch(`https://localhost:7147/api/file?path=${path}${name.split('.')[0]}`);
+            const res = await fetch(`https://localhost:7147/api/file?path=${path}${name.split('.')[0]}&userMail=${get(usrData).email}`);
             files = await res.json();
             currentPath += `${name.split('.')[0]}/`;
             dispatch('updatePath', {detail: currentPath})
@@ -108,7 +110,7 @@
             path = '/';
         }
         dispatch('updatePath', {detail: currentPath})
-        const res = await fetch(`https://localhost:7147/api/file?path=${path}`);
+        const res = await fetch(`https://localhost:7147/api/file?path=${path}&userMail=${get(usrData).email}`);
         files = await res.json();
     }
 
@@ -118,7 +120,7 @@
         }
 
         const req = new XMLHttpRequest();
-        req.open('GET', `https://localhost:7147/api/file?path=${file.virtualPath}${file.name.split('.')[0]}`, false);
+        req.open('GET', `https://localhost:7147/api/file?path=${file.virtualPath}${file.name.split('.')[0]}&userMail=${get(usrData).email}`, false);
         req.send(null);
         let myFiles = JSON.parse(req.responseText);
             

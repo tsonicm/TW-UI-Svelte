@@ -11,13 +11,18 @@
 
     onMount (() => {
         if (get(usrData).email === undefined || get(usrData).email === '' || get(usrData).email === null) {
-            // goto('/');
+            goto('/');
         } else {
             email = get(usrData).email;
             firstName = get(usrData).firstName;
             lastName = get(usrData).lastName;
         }
     });
+
+    function logout() {
+        usrData.set({});
+        goto('/');
+    }
 
 </script>
 
@@ -26,7 +31,7 @@
         <div class = "title">
             <h1>We<span>Sync</span></h1>
         </div>
-        <div class = "account">
+        <div class = "account" on:click={logout}>
             <img id = "pfp" src = 'https://gravatar.com/avatar/{sha256(email)}' alt = "Profile Picture">
             <p class = "name">{firstName} {lastName}</p>
         </div>
@@ -52,6 +57,12 @@
         width: 120px;
         height: 120px;
         float: right;
+    }
+
+    .account:hover {
+        cursor: pointer;
+        background: #d9d9d9;
+        border-radius: 15px;
     }
 
     #pfp {

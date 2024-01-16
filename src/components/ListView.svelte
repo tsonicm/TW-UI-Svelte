@@ -8,6 +8,8 @@
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
     import CreateDirectoryModal from './CreateDirectoryModal.svelte';
     import { createEventDispatcher } from 'svelte';
+    import { get } from 'svelte/store';
+    import { usrData } from '$lib/store.js';
 
     // import localDB from '../data/files.json';
 
@@ -26,7 +28,7 @@
     export function reloadMe(reloadPath) {
         console.log("GridViewPath: " + reloadPath);
         const req = new XMLHttpRequest();
-        req.open('GET', 'https://localhost:7147/api/file?path=' + reloadPath, false);
+        req.open('GET', 'https://localhost:7147/api/file?path=' + reloadPath + '&userMail=' + get(usrData).email, false);
         req.send(null);
         files = JSON.parse(req.responseText);
     }
@@ -73,7 +75,7 @@
     }
 
     onMount(async () => {
-        const res = await fetch('https://localhost:7147/api/file?path=/');
+        const res = await fetch('https://localhost:7147/api/file?path=/&userMail=' + get(usrData).email);
         files = await res.json();
         // files = localDB;
         sortAlphabetically(files);
@@ -86,14 +88,14 @@
             method: 'DELETE'
         })
         if (res2.status === 200) {
-            const res = await fetch('https://localhost:7147/api/file?path=' + currentPath);
+            const res = await fetch('https://localhost:7147/api/file?path=' + currentPath + '&userMail=' + get(usrData).email);
             files = await res.json();
         }
     }
 
     async function handleFolderCreated() {
         showDirModal = false;
-        const res = await fetch('https://localhost:7147/api/file?path=' + currentPath + '/');
+        const res = await fetch('https://localhost:7147/api/file?path=' + currentPath + '/' + '&userMail=' + get(usrData).email);
         files = await res.json();
     }
 
@@ -111,7 +113,7 @@
         }
 
         const req = new XMLHttpRequest();
-        req.open('GET', `https://localhost:7147/api/file?path=${file.virtualPath}${file.name.split('.')[0]}`, false);
+        req.open('GET', `https://localhost:7147/api/file?path=${file.virtualPath}${file.name.split('.')[0]}&userMail=${get(usrData).email}`, false);
         req.send(null);
         let myFiles = JSON.parse(req.responseText);
             
@@ -136,7 +138,7 @@
 
     async function handleDownload(ext, id, path, name) {
         if (ext === "dir") {
-            const res = await fetch(`https://localhost:7147/api/file?path=${path}${name.split('.')[0]}`);
+            const res = await fetch(`https://localhost:7147/api/file?path=${path}${name.split('.')[0]}&userMail=${get(usrData).email}`);
             files = await res.json();
             currentPath += `${name.split('.')[0]}/`;
             dispatch('updatePath', {detail: currentPath})
@@ -160,7 +162,7 @@
             path = '/';
         }
         dispatch('updatePath', {detail: currentPath})
-        const res = await fetch(`https://localhost:7147/api/file?path=${path}`);
+        const res = await fetch(`https://localhost:7147/api/file?path=${path}&userMail=${get(usrData).email}`);
         files = await res.json();
     }
 
@@ -199,18 +201,18 @@
             {#each files as file}
                 {#if getExtension(file.name) === 'dir'}
                     <tr>
-                        <td><a style="cursor: pointer;" on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)}><img src = {folder} alt = "Download File" /></a></td>
-                        {#if checkEmpty(file)}
-                            <td colspan="2">{shortenNames(file.name)}</td>
+                        <td><a class="dlText" on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)}><img src = {folder} alt = "Download File" /></a></td>
+                        {#if !checkEmpty(file)}
+                            <td colspan="3"><a class="dlText" on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)}>{shortenNames(file.name)}</a></td>
+                            {:else}
+                            <td colspan="2"><a class="dlText" on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)}>{shortenNames(file.name)}</a></td>
                             <td><a id="delete-this" on:click={handleDelete(file.id)}>X</a></td>
-                        {:else}
-                            <td colspan="3">{shortenNames(file.name)}</td>
                         {/if}
                     </tr>
                 {:else}
                     <tr>
                         <td><a href='https://localhost:7147/api/file/{file.id}'><img src = {download} alt = "Download File" /></a></td>
-                        <td>{file.name}</td>
+                        <td><a class="dlText" on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)}>{file.name}</a></td>
                         <td>{convertBytes(file.size)}</td>
                         <td><a id="delete-this" on:click={handleDelete(file.id)}>X</a></td>
                     </tr>
@@ -289,6 +291,14 @@
     }
 
     #delete-this:hover {
+        color: #900000;
+    }
+
+    .dlText {
+        cursor: pointer;
+    }
+
+    .dlText:hover {
         color: #900000;
     }
 </style>
