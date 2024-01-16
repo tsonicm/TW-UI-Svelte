@@ -30,13 +30,14 @@
         sortAlphabetically(files);
     });
 
-    function handleDelete() {
-        const res = fetch('https://localhost:7147/api/file/' + this.file.id, {
+    async function handleDelete() {
+        const res2 = fetch('https://localhost:7147/api/file/' + this.file.id, {
             method: 'DELETE'
         })
-
-        const res = await fetch('https://localhost:7147/api/file');
-        files = await res.json();
+        if (res2.status === 200) {
+            const res = await fetch('https://localhost:7147/api/file');
+            files = await res.json();
+        }
     }
 </script>
 
