@@ -1,8 +1,8 @@
 <script>
     import Button from './Button.svelte';
     import { createEventDispatcher } from 'svelte';
-    import { persisted } from 'svelte-persisted-store';
     import { goto } from '$app/navigation';
+    import { usrData } from '$lib/store.js';
 
     const dispatch = createEventDispatcher();
     let email = '';
@@ -24,9 +24,9 @@
         .then(res => res.json())
         .then(data => {
             if (data.status != 404) {
-                persisted.set('email', data.email);
-                persisted.set('firstName', data.firstName);
-                persisted.set('lastName', data.lastName);
+                usrData.set('email', data.email);
+                usrData.set('firstName', data.firstName);
+                usrData.set('lastName', data.lastName);
             } else {
                 alert("User not found!");
             }})

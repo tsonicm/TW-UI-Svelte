@@ -1,7 +1,8 @@
 <script>
     import sha256 from 'js-sha256';
-    import { persisted } from 'svelte-persisted-store';
     import { goto } from '$app/navigation';
+    import { get } from 'svelte/store';
+    import { usrData } from '$lib/store.js';
 
     let email = 'John.Doe@host.tld';
     let firstName = 'John';
@@ -10,9 +11,9 @@
     if (persisted.get('email') == null) {
         goto('/');
     } else {
-        let email = persisted.get('email');
-        let firstName = persisted.get('firstName');
-        let lastName = persisted.get('lastName');
+        let email = get(usrData).get('email');
+        let firstName = get(usrData).get('firstName');
+        let lastName = get(usrData).get('lastName');
     }
 
 
