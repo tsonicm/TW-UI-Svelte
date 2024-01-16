@@ -3,6 +3,8 @@
     import upload from '$lib/images/plus.png';
     import convertBytes from '$lib/convertBytes.js';
     import sendForm from '$lib/sendForm.js';
+    import { usrData } from '$lib/store.js';
+    import { get } from 'svelte/store';
 
 
     function showModal() {
@@ -57,6 +59,9 @@
             e.preventDefault();
 
             let formData = new FormData(form);
+
+            formData.append('owner', get(usrData).email);
+            
             let response = sendForm(formData);
         
             if (response) {

@@ -11,7 +11,7 @@
 
     onMount (() => {
         if (get(usrData).email === undefined || get(usrData).email === '' || get(usrData).email === null) {
-            goto('/');
+            // goto('/');
         } else {
             email = get(usrData).email;
             firstName = get(usrData).firstName;
