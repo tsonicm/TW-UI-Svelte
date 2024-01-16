@@ -11,7 +11,7 @@
     // const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     async function login() {
-        const res = await fetch('https://localhost:7147/api/login', {
+        const res = await fetch('https://localhost:7147/api/user/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
