@@ -24,9 +24,9 @@
         .then(res => res.json())
         .then(data => {
             if (data.status != 404) {
-                persisted.set('email', data.token);
-                persisted.set('firstName', data.user);
-                persisted.set('lastName', data.user);
+                persisted.set('email', data.email);
+                persisted.set('firstName', data.firstName);
+                persisted.set('lastName', data.lastName);
             } else {
                 alert("User not found!");
             }})
