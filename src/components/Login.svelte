@@ -8,7 +8,7 @@
     let email = '';
     let password = '';
 
-    // const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     async function login() {
         const res = await fetch('https://localhost:7147/api/user/login', {
@@ -22,15 +22,15 @@
             })
         })
         .then(res => res.json())
-        .then(data => {
+        .then(async data => {
             if (data.status != 404) {
                 usrData.set(data);
+                await sleep(500);
+                goto('/dashboard');
             } else {
                 alert("User not found!");
-            }})
-        .then(() => {
-            goto('/dashboard')
-        }).catch(err => {
+                goto('/');
+            }}).catch(err => {
             console.log(err);
             alert("API Unavailable!");
         });

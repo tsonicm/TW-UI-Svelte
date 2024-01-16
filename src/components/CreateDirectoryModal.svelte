@@ -3,6 +3,7 @@
     import { usrData } from '$lib/store.js';
     import { get } from 'svelte/store';
     import { createEventDispatcher } from 'svelte';
+	import Button from './Button.svelte';
 
     export let vPath;
 
@@ -10,53 +11,96 @@
     let email = get(usrData).email;
 
     onMount(() => {
-        document.getElementById('create-dir').addEventListener('submit', (e) => {
+        console.log(vPath);
+        document.getElementById('create-dir').addEventListener('submit', async (e) => {
             e.preventDefault();
             let dirName = document.getElementById('dir-name').value;
+
+            if (vPath === undefined || vPath === null || vPath === '') {
+                vPath = '/';
+            }
+
             let data = {
                 folderName: dirName,
                 owner: email,
                 Virtualpath: vPath
             };
-            fetch('https://localhost:7147/api/directory', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 200) {
+            
+            try {
+                let result = await fetch('https://localhost:7147/api/file/folder', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+
+                result = await result.json();
+
+                if (result.status === 200) {
                     dispatch('folderCreated');
+                    return;
                 } else {
                     dispatch('folderNotCreated');
+                    return;
                 }
-            })
-            .catch(err => {
+            } catch (err) {
                 console.log(err);
-                alert('API Unavailable!');
-            });
+                dispatch('folderNotCreated');
+                return;
+            }
+
+        });
+
+        document.getElementById('closeMe').addEventListener('click', () => {
+            dispatch('closeModal');
         });
     });
 
 </script>
 
-<div id="centered">
-    <form id="create-dir">
-        <label for="dir-name">Directory Name:</label>
-        <input type="text" id="dir-name" name="dir-name" required>
-        <input type="submit" value="Create">
-    </form>
+<div id = "createModalBackground">
+    <div id = "centered">
+        <div id = "closeMe">
+            X
+        </div>
+        <form id="create-dir">
+            <label for="dir-name" style="margin-bottom: 5px;">Directory Name:</label>
+            <input type="text" id="dir-name" name="dir-name" required style="margin-bottom: 5px;">
+            <Button>Create</Button>
+        </form>
+    </div>
 </div>
 
 <style>
+
+    #closeMe {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 5px;
+        right: 0px;
+        cursor: pointer;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 0.8rem;
+        color: #900000;
+    }
+
+    #closeMe:hover {
+        color: #adadad;
+    }
+
     #centered {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        background-color: white;
+        border-radius: 10px;
+
+        padding: 15px;
+        width: 180px;
     }
 
     #create-dir {
@@ -64,5 +108,21 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+    }
+
+    #createModalBackground {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+
+        background-color: rgba(0, 0, 0, 0.5);
+
+        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    }
+
+    form {
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
 </style>

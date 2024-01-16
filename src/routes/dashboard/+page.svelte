@@ -6,6 +6,7 @@
     import Button from '../../components/Button.svelte';
 
     let displayStyle = true;
+    let vPath;
 
     function setActiveBtn() {
         let btns = document.querySelectorAll('button');
@@ -38,12 +39,12 @@
         </Button>
 </div>
 {#if displayStyle}
-    <GridView />
+    <GridView on:updatePath={e => vPath = e.detail.vPath} />
 {:else}
-    <ListView />
+    <ListView on:updatePath={e => vPath = e.detail.vPath}/>
 {/if}
 
-<UploadFilesModal />
+<UploadFilesModal vPath = '{vPath}'/>
 
 <style>
     h1 {

@@ -4,11 +4,16 @@
     import createDir from '$lib/images/createDir.png';
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
+    import CreateDirectoryModal from './CreateDirectoryModal.svelte';
 
     // import localDB from '../data/files.json';
     let files = [];
 
     let sortAlpha = 1, sortSize = 0;
+
+    let showDirModal = false;
+    
+    let vPath;
 
     function sortFilesAlpha() {
         if (sortAlpha === 0) {
@@ -51,6 +56,8 @@
         files = await res.json();
         // files = localDB;
         sortAlphabetically(files);
+        vPath = files[0].virtualPath;
+        dispatch('changePath', {detail: vPath});
     });
 
     async function handleDelete(fk) {
@@ -62,7 +69,26 @@
             files = await res.json();
         }
     }
+
+    async function handleFolderCreated() {
+        showModal = false;
+        const res = await fetch('https://localhost:7147/api/file');
+        files = await res.json();
+    }
+
+    function handleFolderNotCreated() {
+        alert('Error creating directory.');
+    }
+
+    function handleShowModal() {
+        showDirModal = !showDirModal;
+    }
+
 </script>
+
+{#if showDirModal}
+    <CreateDirectoryModal on:folderCreated={handleFolderCreated} on:folderNotCreated={handleFolderNotCreated} on:closeModal={handleShowModal}/>
+{/if}
 
 <div class = "content-wrapper">
     <table>
@@ -79,7 +105,7 @@
             <th></th>
         </tr>
         <tr>
-            <td><a on:click={showModal}><img src = {createDir} alt = "Create Directory" /></a></td>
+            <td><a style="cursor:pointer;" on:click={handleShowModal}><img src = {createDir} alt = "Create Directory" /></a></td>
             <td colspan = "3">Create a directory</td>
         </tr>
         {#key sortAlpha}

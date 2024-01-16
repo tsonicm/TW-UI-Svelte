@@ -4,10 +4,19 @@
     import doc from '$lib/images/document.png';
     import image from '$lib/images/image.png';
     import zip from '$lib/images/zip.png';
+    import createDir from '$lib/images/createDir.png';
+    import folder from '$lib/images/folder.png';
+    import backOne from '$lib/images/return.png';
     import convertBytes from '$lib/convertBytes.js';
     import { sortAlphabetically, sortAlphabeticallyReverse, sortBySize, sortBySizeReverse } from '$lib/sortFiles.js';
+    import CreateDirectoryModal from './CreateDirectoryModal.svelte';
+    import { createEventDispatcher } from 'svelte';
 
     // import localDB from '../data/files.json';
+
+    let vPath;
+
+    const dispatch = createEventDispatcher();
 
     function getExtension(name) {
         let extension = name.split('.').pop();
@@ -18,16 +27,27 @@
         if (name.length > 15) {
             return name.substring(0, 8) + "..." + name.substring(name.length - 6, name.length);
         }
+
+        if (getExtension(name) === "dir") {
+            return name.substring(0, name.length - 4);
+        }
+
         return name;
     }
 
     let files = [];
 
+    let showDirModal = false;
+
+    let currentPath = '/';
+
     onMount(async () => {
-        const res = await fetch('https://localhost:7147/api/file');
+        const res = await fetch('https://localhost:7147/api/file?path=/');
         files = await res.json();
         // files = localDB;
         sortAlphabetically(files);
+        vPath = files[0].virtualPath;
+        dispatch('changePath', {detail: vPath});
     });
 
     async function handleDelete(fk) {
@@ -39,27 +59,91 @@
             files = await res.json();
         }
     }
+
+    async function handleFolderCreated() {
+        showModal = false;
+        const res = await fetch('https://localhost:7147/api/file');
+        files = await res.json();
+    }
+
+    function handleFolderNotCreated() {
+        alert('Error creating directory.');
+    }
+
+    function handleShowModal() {
+        showDirModal = !showDirModal;
+    }
+
+    async function handleDownload(ext, id, path, name) {
+        if (ext === "dir") {
+            const res = await fetch(`https://localhost:7147/api/file?path=${path}${name.split('.')[0]}`);
+            files = await res.json();
+            currentPath += `${name.split('.')[0]}/`;
+        } else {
+        return location.href = `https://localhost:7147/api/file/${id}`;
+        }
+    }
+
+    async function returnOne() {
+        let path = currentPath.split('/');
+        path.pop();
+        path.pop();
+        path = path.join('/');
+        currentPath = path;
+        if (currentPath === '') {
+            currentPath = '/';
+        }
+        const res = await fetch(`https://localhost:7147/api/file?path=${path}`);
+        files = await res.json();
+    }
+    
 </script>
 
+{#if showDirModal}
+    <CreateDirectoryModal on:folderCreated={handleFolderCreated} on:folderNotCreated={handleFolderNotCreated} on:closeModal={handleShowModal} vPath='{currentPath}'/>
+{/if}
+
 <div id="files">
+    <div id="file" class = "createDir">
+        <a on:click={handleShowModal}>
+            <img id="imgType" src = {createDir} alt = "Create Directory" />
+            <p>Create Directory</p>
+        </a>
+    </div>
+    {#if currentPath !== '/' && currentPath !== ''}
+        <div id="file" class="upOne">
+            <a on:click={returnOne}>
+                <img id="imgType" src = {backOne} alt = "Back One Dir" />
+                <p>Back</p>
+            </a>
+        </div>
+    {/if}
     {#each files as file}
         <div id="file">
+
             <a on:click={handleDelete(file.id)}>
                 <div id="delete-me">
                     X
                 </div>
             </a>
-            <a href = 'htpps://localhost:7147/api/file/${file.id}'>
+            <a on:click={handleDownload(getExtension(file.name),file.id, file.virtualPath, file.name)} style="cursor:pointer;">
+ 
             {#if getExtension(file.name) === "docx" || getExtension(file.name) === "doc" || getExtension(file.name) === "pdf" || getExtension(file.name) === "pptx" || getExtension(file.name) === "ppt" || getExtension(file.name) === "xlsx" || getExtension(file.name) === "xls"}
                 <img id="imgType" src={doc} alt="Document">
             {:else if getExtension(file.name) === "png" || getExtension(file.name) === "jpg" || getExtension(file.name) === "jpeg" || getExtension(file.name) === "gif"}
                 <img id="imgType" src={image} alt="Picture">
             {:else if getExtension(file.name) === "zip" || getExtension(file.name) === "rar" || getExtension(file.name) === "7z"}
                 <img id="imgType" src={zip} alt="Compressed File">
+            {:else if getExtension(file.name) === "dir"}
+                <img id="imgType" src={folder} alt="Directory">
             {:else}
                 <img id="imgType" src={txt} alt="Text File">
             {/if}
-            <p>{shortenNames(file.name)}<br><span>{convertBytes(file.size)}</span></p>
+            {#if getExtension(file.name) === "dir"}
+                <p>{shortenNames(file.name)}</p>
+            {:else}
+                <p>{shortenNames(file.name)}<br><span>{convertBytes(file.size)}</span></p>
+            {/if}
             </a>
         </div>
     {:else}
@@ -68,6 +152,14 @@
 </div> 
 
 <style>
+
+    .createDir {
+        cursor: pointer;
+    }
+
+    .upOne {
+        cursor: pointer;
+    }
 
     .notFound {
         font-size: 1.2rem;

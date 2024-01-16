@@ -7,6 +7,8 @@
     import { get } from 'svelte/store';
 
 
+    export let vPath;
+
     function showModal() {
         let modal = document.querySelector('#uploadModalBackground');
         let modalContent = document.querySelector('#uploadModal');
@@ -61,6 +63,12 @@
             let formData = new FormData(form);
 
             formData.append('owner', get(usrData).email);
+
+            if (vPath === undefined || vPath === null || vPath === '') {
+                vPath = '/';
+            }
+
+            formData.append('Virtualpath', vPath);
             
             let response = sendForm(formData);
         
