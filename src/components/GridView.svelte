@@ -31,7 +31,6 @@
     });
 
     async function handleDelete(fk) {
-        console.log(fk)
         const res2 = await fetch('https://localhost:7147/api/file/' + fk, {
             method: 'DELETE'
         })
