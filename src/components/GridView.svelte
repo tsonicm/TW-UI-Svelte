@@ -29,11 +29,25 @@
         // files = localDB;
         sortAlphabetically(files);
     });
+
+    function handleDelete() {
+        const res = fetch('https://localhost:7147/api/file/' + this.file.id, {
+            method: 'DELETE'
+        })
+
+        const res = await fetch('https://localhost:7147/api/file');
+        files = await res.json();
+    }
 </script>
 
 <div id="files">
     {#each files as file}
         <div id="file">
+            <a on:click={handleDelete}>
+                <div id="delete-me">
+                    X
+                </div>
+            </a>
             <a href = 'htpps://localhost:7147/api/file/${file.id}'>
             {#if getExtension(file.name) === "docx" || getExtension(file.name) === "doc" || getExtension(file.name) === "pdf" || getExtension(file.name) === "pptx" || getExtension(file.name) === "ppt" || getExtension(file.name) === "xlsx" || getExtension(file.name) === "xls"}
                 <img id="imgType" src={doc} alt="Document">
@@ -93,6 +107,29 @@
         justify-content: center;
         height: 150px;
         text-align: center;
+        position: relative;
+    }
+
+    #delete-me {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: #900000;
+        color: #ffffff;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        font-size: 0.6rem;
+    }
+
+    #delete-me:hover {
+        background-color: #adadad;
+        color: #000000;
     }
 
     #file:hover {
