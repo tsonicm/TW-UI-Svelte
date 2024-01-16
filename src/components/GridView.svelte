@@ -36,9 +36,7 @@
         })
         if (res2.status === 200) {
             const res = await fetch('https://localhost:7147/api/file');
-            console.log(res)
             files = await res.json();
-            console.log(files)
         }
     }
 </script>
