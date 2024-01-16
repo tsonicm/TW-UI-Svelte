@@ -11,9 +11,9 @@
     if (get(usrData).email == '') {
         goto('/');
     } else {
-        let email = get(usrData).email;
-        let firstName = get(usrData).firstName;
-        let lastName = get(usrData).lastName;
+        email = get(usrData).email;
+        firstName = get(usrData).firstName;
+        lastName = get(usrData).lastName;
     }
 
 
