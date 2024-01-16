@@ -8,7 +8,7 @@
     let firstName = 'John';
     let lastName = 'Doe';
 
-    if (get(usrData).email == '') {
+    if (get(usrData).email === undefined || get(usrData).email === '' || get(usrData).email === null) {
         goto('/');
     } else {
         email = get(usrData).email;
